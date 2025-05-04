@@ -3,11 +3,7 @@ using UnityEngine;
 public class MovePlayer : MonoBehaviour
 {
     #region Private Members
-
-    /// <summary>
-    /// Character controller of the player
-    /// </summary>
-    private CharacterController _controller;
+    
     /// <summary>
     /// Reads input for a normalized value. negative for a, positive for d. (Double check this)
     /// </summary>
@@ -28,8 +24,10 @@ public class MovePlayer : MonoBehaviour
     /// Hold the eulerangles of the player without having to keep reading it from the object. Helps avoid camera issues
     /// </summary>
     private float _yaw;
-
-    private Vector3 _currentVelocity;
+    /// <summary>
+    /// Physics-based body for the player
+    /// </summary>
+    private Rigidbody _body;
     
     #endregion Private Members
 
@@ -47,53 +45,36 @@ public class MovePlayer : MonoBehaviour
     /// Speed the player moves
     /// </summary>
     public float Velocity;
-    
-    public float Acceleration;
 
-    public float Deceleration;
+    public float IceFriction;
+
+    public float MaxSpeed;
 
     #endregion Public Fields
 
     #region Private Methods
 
     /// <summary>
-    /// This will move the player depending on what controls the user is pressing
-    /// </summary>
-    private void Move()
-    {
-        float speed = _inputSprinting ? Velocity * SprintMod : Velocity;
-
-        // movement direction in local space
-        Vector3 inputDir = new Vector3(_inputAD, 0, _inputWS).normalized;
-
-        Vector3 forward = Quaternion.Euler(0, _yaw, 0) * inputDir;
-
-        _controller.Move(speed * Time.fixedDeltaTime * forward);
-    }
-
-    /// <summary>
     /// Meant to simulate the ice
     /// </summary>
     private void IceMove()
     {
-        Vector3 inputDir = new Vector3(_inputAD, 0, _inputWS).normalized;
-        Vector3 targetDirection = Quaternion.Euler(0, _yaw, 0) * inputDir;
+        Vector3 moveInput = new Vector3(_inputAD, 0, _inputWS).normalized;
+        Vector3 moveDir = transform.TransformDirection(moveInput);
 
-        float targetSpeed = _inputSprinting ? Velocity * SprintMod : Velocity;
-        Vector3 desiredVelocity = targetDirection * targetSpeed;
-
-        // Accelerate toward the desired velocity
-        if (desiredVelocity.magnitude > 0.1f)
+        if (moveInput.magnitude > 0)
         {
-            _currentVelocity = Vector3.Lerp(_currentVelocity, desiredVelocity, Acceleration * Time.fixedDeltaTime);
+            // apply force forward in the direction off the player
+            if (_body.linearVelocity.magnitude < MaxSpeed)
+            {
+                float mod = _inputSprinting ? SprintMod : 1f;
+                _body.AddForce(mod * Velocity * moveDir, ForceMode.Acceleration);
+            }
         }
         else
         {
-            // Decelerate slowly
-            _currentVelocity = Vector3.Lerp(_currentVelocity, Vector3.zero, Deceleration * Time.fixedDeltaTime);
+            _body.AddForce(-_body.linearVelocity.normalized * IceFriction, ForceMode.Acceleration);
         }
-
-        _controller.Move(_currentVelocity * Time.fixedDeltaTime);
     }
 
     /// <summary>
@@ -117,7 +98,7 @@ public class MovePlayer : MonoBehaviour
     /// </summary>
     void Start()
     {
-        _controller = GetComponent<CharacterController>();
+        _body = GetComponent<Rigidbody>();
         _yaw = transform.eulerAngles.y;
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -131,6 +112,7 @@ public class MovePlayer : MonoBehaviour
     {
         _inputAD            = Input.GetAxis("Horizontal");   // a/d
         _inputWS            = Input.GetAxis("Vertical");     // w/s
+        _inputLookX         = Input.GetAxis("Mouse X");      // right pos / left neg
         _inputSprinting     = Input.GetAxis("Fire3") == 1f;
     }
 
@@ -139,16 +121,12 @@ public class MovePlayer : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
-        // right pos / left neg - x
-        // up pos / down neg - y
-        _inputLookX = Input.GetAxis("Mouse X");
         Look();
     }
 
     // do all of the movement here as this is nice for rigid body movement
     void FixedUpdate()
     {
-        //Move();
         IceMove();
     }
 
