@@ -24,11 +24,12 @@ public class MovePlayer : MonoBehaviour
     /// Reads input to see if the user is moving the mouse side to side
     /// </summary>
     private float _inputLookX;
-
     /// <summary>
     /// Hold the eulerangles of the player without having to keep reading it from the object. Helps avoid camera issues
     /// </summary>
     private float _yaw;
+
+    private Vector3 _currentVelocity;
     
     #endregion Private Members
 
@@ -46,6 +47,10 @@ public class MovePlayer : MonoBehaviour
     /// Speed the player moves
     /// </summary>
     public float Velocity;
+    
+    public float Acceleration;
+
+    public float Deceleration;
 
     #endregion Public Fields
 
@@ -64,6 +69,31 @@ public class MovePlayer : MonoBehaviour
         Vector3 forward = Quaternion.Euler(0, _yaw, 0) * inputDir;
 
         _controller.Move(speed * Time.fixedDeltaTime * forward);
+    }
+
+    /// <summary>
+    /// Meant to simulate the ice
+    /// </summary>
+    private void IceMove()
+    {
+        Vector3 inputDir = new Vector3(_inputAD, 0, _inputWS).normalized;
+        Vector3 targetDirection = Quaternion.Euler(0, _yaw, 0) * inputDir;
+
+        float targetSpeed = _inputSprinting ? Velocity * SprintMod : Velocity;
+        Vector3 desiredVelocity = targetDirection * targetSpeed;
+
+        // Accelerate toward the desired velocity
+        if (desiredVelocity.magnitude > 0.1f)
+        {
+            _currentVelocity = Vector3.Lerp(_currentVelocity, desiredVelocity, Acceleration * Time.fixedDeltaTime);
+        }
+        else
+        {
+            // Decelerate slowly
+            _currentVelocity = Vector3.Lerp(_currentVelocity, Vector3.zero, Deceleration * Time.fixedDeltaTime);
+        }
+
+        _controller.Move(_currentVelocity * Time.fixedDeltaTime);
     }
 
     /// <summary>
@@ -118,7 +148,8 @@ public class MovePlayer : MonoBehaviour
     // do all of the movement here as this is nice for rigid body movement
     void FixedUpdate()
     {
-        Move();
+        //Move();
+        IceMove();
     }
 
     #endregion Core Unity Methods

@@ -202,7 +202,7 @@ MonoBehaviour:
     FieldOfView: 60.000004
     OrthographicSize: 5
     NearClipPlane: 0.3
-    FarClipPlane: 5000
+    FarClipPlane: 6000
     Dutch: 0
     ModeOverride: 0
     PhysicalProperties:
@@ -453,7 +453,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!1 &832575517
 GameObject:
@@ -623,7 +623,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 5000
+  far clip plane: 6000
   field of view: 60.000004
   orthographic: 0
   orthographic size: 5
@@ -1092,7 +1092,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Sensitivity: 2
   SprintMod: 2
-  Velocity: 100
+  Velocity: 500
+  Acceleration: 10
+  Deceleration: 2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
