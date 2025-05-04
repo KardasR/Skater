@@ -24,6 +24,11 @@ public class MovePlayer : MonoBehaviour
     /// Reads input to see if the user is moving the mouse side to side
     /// </summary>
     private float _inputLookX;
+
+    /// <summary>
+    /// Hold the eulerangles of the player without having to keep reading it from the object. Helps avoid camera issues
+    /// </summary>
+    private float _yaw;
     
     #endregion Private Members
 
@@ -51,18 +56,14 @@ public class MovePlayer : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        if (_inputSprinting)
-        {
-            _inputAD    *= SprintMod;
-            _inputWS    *= SprintMod;
-        }
+        float speed = _inputSprinting ? Velocity * SprintMod : Velocity;
 
-        Vector3 move = _controller.transform.TransformDirection(new Vector3(_inputAD, 0, _inputWS));
+        // movement direction in local space
+        Vector3 inputDir = new Vector3(_inputAD, 0, _inputWS).normalized;
 
-        // x - left / right
-        // y - up / down
-        // z - forward / backward
-        _controller.Move(move);
+        Vector3 forward = Quaternion.Euler(0, _yaw, 0) * inputDir;
+
+        _controller.Move(speed * Time.fixedDeltaTime * forward);
     }
 
     /// <summary>
@@ -71,10 +72,10 @@ public class MovePlayer : MonoBehaviour
     private void Look()
     {
         // rotation nation
-        Vector3 curRotation = _controller.transform.eulerAngles;
-        curRotation.y += _inputLookX;
+        if (Mathf.Abs(_inputLookX) > 0.1f)
+            _yaw += _inputLookX * Sensitivity;
 
-        _controller.transform.rotation = Quaternion.Euler(curRotation);
+        transform.rotation = Quaternion.Euler(0f, _yaw, 0f);
     }
 
     #endregion Private Methods
@@ -87,6 +88,7 @@ public class MovePlayer : MonoBehaviour
     void Start()
     {
         _controller = GetComponent<CharacterController>();
+        _yaw = transform.eulerAngles.y;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -97,8 +99,8 @@ public class MovePlayer : MonoBehaviour
     /// </summary>
     void Update()
     {
-        _inputAD            = Input.GetAxis("Horizontal") * Velocity;   // a/d
-        _inputWS            = Input.GetAxis("Vertical")   * Velocity;   // w/s
+        _inputAD            = Input.GetAxis("Horizontal");   // a/d
+        _inputWS            = Input.GetAxis("Vertical");     // w/s
         _inputSprinting     = Input.GetAxis("Fire3") == 1f;
     }
 
@@ -107,9 +109,9 @@ public class MovePlayer : MonoBehaviour
     /// </summary>
     void LateUpdate()
     {
-        // right pos / left neg
-        // up pos / down neg
-        _inputLookX = Input.GetAxis("Mouse X") * Sensitivity;
+        // right pos / left neg - x
+        // up pos / down neg - y
+        _inputLookX = Input.GetAxis("Mouse X");
         Look();
     }
 
