@@ -422,11 +422,11 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.9999998, z: 0.14999998}
+  m_Size: {x: 1, y: 1, z: 0.14999998}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &570274440
 Rigidbody:
@@ -451,10 +451,22 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 84
-  m_CollisionDetection: 0
+  m_IsKinematic: 1
+  m_Interpolate: 1
+  m_Constraints: 16
+  m_CollisionDetection: 1
+--- !u!114 &570274441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 570274435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca22877542c5eaf408d53e32a1732ae1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -674,6 +686,73 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!1 &1060043154
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1060043155}
+  - component: {fileID: 1060043156}
+  - component: {fileID: 1060043157}
+  m_Layer: 0
+  m_Name: StickTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1060043155
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060043154}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.10671234, y: 0.26800004, z: 0.49274597}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1926871308}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1060043156
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060043154}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 50
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1060043157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1060043154}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d013e8fff0102c5428dccb3889fc998c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skater: {fileID: 1926871312}
 --- !u!1 &1107431210
 GameObject:
   m_ObjectHideFlags: 0
@@ -808,7 +887,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 18.8
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
       propertyPath: m_LocalPosition.z
@@ -816,7 +895,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071067
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
       propertyPath: m_LocalRotation.x
@@ -828,11 +907,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -846,6 +925,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: puck
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
+      propertyPath: m_TagString
+      value: Puck
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -856,6 +939,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
       insertIndex: -1
       addedObject: {fileID: 570274440}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 570274441}
   m_SourcePrefab: {fileID: 100100000, guid: 7e6610738f5fad84796133b184f3b7da, type: 3}
 --- !u!4 &1458756819 stripped
 Transform:
@@ -980,7 +1066,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 38032d75ae1ab8c43af054b214c9a94e, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 1060043155}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 38032d75ae1ab8c43af054b214c9a94e, type: 3}
       insertIndex: -1
@@ -1064,9 +1153,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Sensitivity: 2
   SprintMod: 2
-  Velocity: 100
-  IceFriction: 100
+  Velocity: 600
+  IceFriction: 400
   MaxSpeed: 1000
+  PassingSpeed: 1000
+  PuckHoldPoint: {fileID: 1060043155}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

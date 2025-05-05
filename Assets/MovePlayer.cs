@@ -28,6 +28,10 @@ public class MovePlayer : MonoBehaviour
     /// Physics-based body for the player
     /// </summary>
     private Rigidbody _body;
+    /// <summary>
+    /// User can only hold one puck at a time
+    /// </summary>
+    private Puck _heldPuck;
     
     #endregion Private Members
 
@@ -45,36 +49,59 @@ public class MovePlayer : MonoBehaviour
     /// Speed the player moves
     /// </summary>
     public float Velocity;
-
+    /// <summary>
+    /// How much to decelerate
+    /// </summary>
     public float IceFriction;
-
+    /// <summary>
+    /// Top speed the user can skate
+    /// </summary>
     public float MaxSpeed;
+    /// <summary>
+    /// How fast the puck shoots off the stick
+    /// </summary>
+    public float PassingSpeed;
+    /// <summary>
+    /// Where the puck will "stick" to
+    /// </summary>
+    public Transform PuckHoldPoint;
 
     #endregion Public Fields
 
     #region Private Methods
 
     /// <summary>
-    /// Meant to simulate the ice
+    /// Move the player as if they were skating
     /// </summary>
     private void IceMove()
     {
         Vector3 moveInput = new Vector3(_inputAD, 0, _inputWS).normalized;
-        Vector3 moveDir = transform.TransformDirection(moveInput);
 
-        if (moveInput.magnitude > 0)
+        // only apply friction when velocity is non-zero
+        if (_body.linearVelocity.sqrMagnitude > 0.01f)
         {
-            // apply force forward in the direction off the player
-            if (_body.linearVelocity.magnitude < MaxSpeed)
-            {
-                float mod = _inputSprinting ? SprintMod : 1f;
-                _body.AddForce(mod * Velocity * moveDir, ForceMode.Acceleration);
-            }
+            Vector3 friction = -_body.linearVelocity.normalized * IceFriction;
+            _body.AddForce(friction, ForceMode.Acceleration);
         }
-        else
-        {
-            _body.AddForce(-_body.linearVelocity.normalized * IceFriction, ForceMode.Acceleration);
-        }
+
+        Vector3 moveDir = transform.TransformDirection(moveInput);
+        Vector3 forward = transform.forward;
+
+        // Angle between input direction and object forward
+        float alignment = Vector3.Dot(moveDir.normalized, forward);
+
+        // Allow full force if mostly forward, reduce otherwise
+        float directionPenalty = Mathf.Clamp01((alignment + 1f) / 2f);
+
+        // Optionally exaggerate penalty for sharp sideways / backwards input
+        directionPenalty = Mathf.Pow(directionPenalty, 2f);
+
+        // Apply sprint mod if sprinting
+        float speed = Velocity * (_inputSprinting ? SprintMod : 1f) * directionPenalty;
+
+        float currentSpeedInMoveDir = Vector3.Dot(_body.linearVelocity, moveDir.normalized);
+        if (currentSpeedInMoveDir < MaxSpeed)
+            _body.AddForce(moveDir * speed, ForceMode.Acceleration);
     }
 
     /// <summary>
@@ -90,6 +117,23 @@ public class MovePlayer : MonoBehaviour
     }
 
     #endregion Private Methods
+
+    #region Public Methods
+
+    /// <summary>
+    /// Pick up a puck. Should be called by the player sticks' trigger object
+    /// </summary>
+    /// <param name="puck">Puck to puck up</param>
+    public void TryPickupPuck(Puck puck)
+    {
+        if (_heldPuck == null && puck.Pickupable)
+        {
+            _heldPuck = puck;
+            puck.Hold(PuckHoldPoint);
+        }
+    }
+
+    #endregion
 
     #region Core Unity Methods
 
@@ -114,6 +158,12 @@ public class MovePlayer : MonoBehaviour
         _inputWS            = Input.GetAxis("Vertical");     // w/s
         _inputLookX         = Input.GetAxis("Mouse X");      // right pos / left neg
         _inputSprinting     = Input.GetAxis("Fire3") == 1f;
+
+        if (_heldPuck != null && Input.GetKeyDown(KeyCode.Space))
+        {
+            _heldPuck.Release(transform.up * PassingSpeed);
+            _heldPuck = null;
+        }
     }
 
     /// <summary>
