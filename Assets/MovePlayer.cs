@@ -161,7 +161,8 @@ public class MovePlayer : MonoBehaviour
 
         if (_heldPuck != null && Input.GetKeyDown(KeyCode.Space))
         {
-            _heldPuck.Release(transform.up * PassingSpeed);
+            Vector3 shotDir = PuckHoldPoint.forward;
+            _heldPuck.Release(shotDir * PassingSpeed);
             _heldPuck = null;
         }
     }

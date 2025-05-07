@@ -5,6 +5,7 @@ public class Puck : MonoBehaviour
     #region Private Members
 
     private Rigidbody _body;
+    private Transform _holdPoint;
 
     private float _pickupCooldown = 0f;
 
@@ -12,9 +13,15 @@ public class Puck : MonoBehaviour
 
     #region Public Fields
 
-    public bool IsHeld { get; private set; }
+    public bool IsHeld
+    {
+        get
+        {
+            return _holdPoint != null;
+        }
+    }
 
-    public float PickupCooldownTime { get; set; }
+    public float PickupCooldownTime;
 
     public bool Pickupable
     {
@@ -30,17 +37,16 @@ public class Puck : MonoBehaviour
 
     public void Hold(Transform holdPoint)
     {
-        IsHeld = true;
-
-        transform.SetParent(holdPoint);
+        _body.isKinematic = true;
+        _holdPoint = holdPoint;
     }
 
     public void Release(Vector3 force)
     {
-        IsHeld = false;
         _pickupCooldown = PickupCooldownTime;
-        
-        transform.SetParent(null);
+        _holdPoint = null;
+
+        _body.isKinematic = false;
         _body.AddForce(force, ForceMode.Impulse);
     }
 
@@ -64,11 +70,11 @@ public class Puck : MonoBehaviour
     /// </summary>
     void FixedUpdate()
     {
-        if (IsHeld && transform.parent != null)
+        if (IsHeld)
         {
-            transform.localPosition = transform.parent.localPosition;
-            Quaternion offset = Quaternion.Euler(90f, 0f, 0f);
-            transform.localRotation = transform.parent.localRotation * offset;
+            _body.MovePosition(_holdPoint.localPosition);
+             Quaternion offset = Quaternion.Euler(90f, 0f, 0f);
+            _body.MoveRotation(_holdPoint.localRotation * offset);
         }
     }
 
