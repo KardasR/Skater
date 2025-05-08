@@ -383,7 +383,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 56a40000
     m_LastClickedID: 42070
-    m_ExpandedIDs: 0000000062a40000
+    m_ExpandedIDs: 0000000088ab0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -412,7 +412,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000062a40000
+    m_ExpandedIDs: 0000000088ab0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1053,6 +1053,20 @@ MonoBehaviour:
       layout: 4
       size: {x: 0, y: 0}
       sizeOverridden: 0
+    - dockPosition: 1
+      containerId: overlay-container--right
+      displayed: 0
+      id: unity-spline-inspector
+      index: 12
+      contents: '{"m_Layout":4,"m_Collapsed":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":0.0,"y":0.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
+      floating: 0
+      collapsed: 0
+      snapOffset: {x: 0, y: 0}
+      snapOffsetDelta: {x: 0, y: 0}
+      snapCorner: 0
+      layout: 4
+      size: {x: 0, y: 0}
+      sizeOverridden: 0
     m_ContainerData:
     - containerId: overlay-toolbar__top
       scrollOffset: 0
@@ -1080,7 +1094,7 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 8.981045, y: -7.118661, z: -11.947224}
+    m_Target: {x: -75.32401, y: -34.1973, z: -11.206889}
     speed: 2
     m_Value: {x: 8.981045, y: -7.118661, z: -11.947224}
   m_RenderMode: 0
@@ -1128,11 +1142,11 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.24186797, y: 0.46905416, z: -0.13528724, w: 0.83856255}
+    m_Target: {x: 0.013822531, y: -0.89988303, z: 0.43503717, w: 0.028623786}
     speed: 2
     m_Value: {x: 0.24186797, y: 0.4690542, z: -0.13528726, w: 0.8385626}
   m_Size:
-    m_Target: 32.64953
+    m_Target: 3.1432893
     speed: 2
     m_Value: 32.64953
   m_Ortho:
