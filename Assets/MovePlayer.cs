@@ -143,6 +143,17 @@ public class MovePlayer : MonoBehaviour
         }
     }
 
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+        // Stop playing the scene in the Editor
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+        // Quit the application
+        Application.Quit();
+        #endif
+    }
+
     #endregion
 
     #region Core Unity Methods
@@ -175,6 +186,9 @@ public class MovePlayer : MonoBehaviour
             _heldPuck.Release(shotDir * PassingSpeed);
             _heldPuck = null;
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Quit();
     }
 
     /// <summary>
