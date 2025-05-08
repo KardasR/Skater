@@ -9,11 +9,9 @@ public class PuckPickupTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.CompareTag("Puck"))
+        if (collider.CompareTag("Puck") && collider.TryGetComponent(out Puck puck))
         {
-            Puck puck = collider.GetComponent<Puck>();
-            if (puck != null)
-                skater.TryPickupPuck(puck);
+            skater.TryPickupPuck(puck);
         }
     }
 }

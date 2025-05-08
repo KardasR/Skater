@@ -2,50 +2,74 @@ using UnityEngine;
 
 public class Puck : MonoBehaviour
 {
-    #region Private Members
+    #region Private Fields
 
+    /// <summary>
+    /// Rigidbody component of the puck. Mainly used to set the iskinematic property to avoid physics issues.
+    /// <para/>
+    /// iskinematic property is true when the puck is held, false when it's not.
+    /// </summary>
     private Rigidbody _body;
-    private Transform _holdPoint;
 
-    private float _pickupCooldown = 0f;
+    /// <summary>
+    /// How much time is left until the puck can be picked up.
+    /// </summary>
+    private float _pickupCooldownTimeLeft = 0f;
 
-    #endregion Private Members
+    #endregion Private Fields
 
     #region Public Fields
 
-    public bool IsHeld
-    {
-        get
-        {
-            return _holdPoint != null;
-        }
-    }
-
+    /// <summary>
+    /// How much time to wait until letting the puck be pickupable.
+    /// </summary>
     public float PickupCooldownTime;
 
+    #endregion Public Fields
+
+    #region Public Properties
+
+    /// <summary>
+    /// Is the puck held?
+    /// </summary>
+    public bool IsHeld
+    {
+        get; private set;
+    }
+
+    /// <summary>
+    /// Can the puck be picked up?
+    /// </summary>
     public bool Pickupable
     {
         get
         {
-            return !IsHeld & _pickupCooldown <= 0f;
+            return !IsHeld && _pickupCooldownTimeLeft <= 0f;
         }
     }
 
-    #endregion Public Fields
+    #endregion
 
     #region Public Methods
 
-    public void Hold(Transform holdPoint)
+    /// <summary>
+    /// Mark the puck is held and turn physics on.
+    /// </summary>
+    public void Hold()
     {
+        IsHeld = true;
         _body.isKinematic = true;
-        _holdPoint = holdPoint;
     }
 
+    /// <summary>
+    /// Start the cooldown, mark the puck is no longer held, push the puck forward.
+    /// </summary>
+    /// <param name="force"></param>
     public void Release(Vector3 force)
     {
-        _pickupCooldown = PickupCooldownTime;
-        _holdPoint = null;
+        _pickupCooldownTimeLeft = PickupCooldownTime;
 
+        IsHeld = false;
         _body.isKinematic = false;
         _body.AddForce(force, ForceMode.Impulse);
     }
@@ -61,21 +85,8 @@ public class Puck : MonoBehaviour
 
     void Update()
     {
-        if (_pickupCooldown > 0f)
-            _pickupCooldown -= Time.deltaTime;
-    }
-
-    /// <summary>
-    /// We need to do this here as the skater does its movement logic in fixedupdate
-    /// </summary>
-    void FixedUpdate()
-    {
-        if (IsHeld)
-        {
-            _body.MovePosition(_holdPoint.localPosition);
-             Quaternion offset = Quaternion.Euler(90f, 0f, 0f);
-            _body.MoveRotation(_holdPoint.localRotation * offset);
-        }
+        if (_pickupCooldownTimeLeft > 0f)
+            _pickupCooldownTimeLeft = Mathf.Max(0, _pickupCooldownTimeLeft - Time.deltaTime);
     }
 
     #endregion Core Unity Methods

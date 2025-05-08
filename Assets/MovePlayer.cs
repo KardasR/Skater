@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class MovePlayer : MonoBehaviour
 {
-    #region Private Members
+    #region Private Fields
     
     /// <summary>
     /// Reads input for a normalized value. negative for a, positive for d. (Double check this)
@@ -33,7 +33,7 @@ public class MovePlayer : MonoBehaviour
     /// </summary>
     private Puck _heldPuck;
     
-    #endregion Private Members
+    #endregion Private Fields
 
     #region Public Fields
 
@@ -105,6 +105,16 @@ public class MovePlayer : MonoBehaviour
     }
 
     /// <summary>
+    /// When a puck is held, move the puck around so it appears attached to the skaters stick.
+    /// </summary>
+    private void MovePuck()
+    {
+        if (_heldPuck == null) return;
+
+        _heldPuck.transform.SetPositionAndRotation(PuckHoldPoint.position, PuckHoldPoint.rotation * Quaternion.Euler(90f, 0f, 0f));
+    }
+
+    /// <summary>
     /// Move the camera around
     /// </summary>
     private void Look()
@@ -123,13 +133,13 @@ public class MovePlayer : MonoBehaviour
     /// <summary>
     /// Pick up a puck. Should be called by the player sticks' trigger object
     /// </summary>
-    /// <param name="puck">Puck to puck up</param>
+    /// <param name="puck">Puck to pick up</param>
     public void TryPickupPuck(Puck puck)
     {
         if (_heldPuck == null && puck.Pickupable)
         {
             _heldPuck = puck;
-            puck.Hold(PuckHoldPoint);
+            puck.Hold();
         }
     }
 
@@ -179,6 +189,7 @@ public class MovePlayer : MonoBehaviour
     void FixedUpdate()
     {
         IceMove();
+        MovePuck();
     }
 
     #endregion Core Unity Methods
